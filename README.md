@@ -4,7 +4,8 @@
 1. cmd에서 project 경로로 이동
 2. jar로 패키지 : mvnw clean package
 3. 실행 : java -jar target/map-rest-1.0.0-SNAPSHOT.jar
-  - h2 database 확인 : http://localhost:8080/h2-console
+
+       - h2 database 확인 : http://localhost:8080/h2-console
   
 ##2. API 기본 정보
 
