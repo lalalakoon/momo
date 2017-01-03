@@ -56,7 +56,7 @@ public class RestRoomService {
     			}
 				
 			} catch (Exception e) {
-    			log.error("exception : " + e.getMessage());
+    			log.error("exception - ID : " + restRoom.getId()+"| e.getMessage : " + e.getMessage());
 			}
 			
 		}

@@ -33,7 +33,7 @@ public class RestRoomController {
      * @return
      */
     
-    @RequestMapping(value = "/json/rest_find" ,method = RequestMethod.GET, produces = { "application/json", "text/json" }, consumes = MediaType.ALL_VALUE)
+    @RequestMapping(value = "/json/rest_find" ,method = RequestMethod.GET, produces = { "application/json;charset=utf-8", "text/json" }, consumes = MediaType.ALL_VALUE)
     public ArrayList<RestRoom> findRestRoom(@RequestParam(value="lat", required=true) String lat, 
 					    		 @RequestParam(value="lon", required=true) String lon,
     							 @RequestParam(value="width", required=true) String width,
@@ -47,7 +47,7 @@ public class RestRoomController {
     }
     
     
-    @RequestMapping(value = "/xml/rest_find",method = RequestMethod.GET, produces = { "application/xml", "text/xml" }, consumes = MediaType.ALL_VALUE)
+    @RequestMapping(value = "/xml/rest_find",method = RequestMethod.GET, produces = { "application/xml;charset=utf-8", "text/xml" }, consumes = MediaType.ALL_VALUE)
     @ResponseBody
     public ArrayList<RestRoom> findRestRoomXml(@RequestParam(value="lat", required=true) String lat, 
 					    		 @RequestParam(value="lon", required=true) String lon,
