@@ -21,13 +21,18 @@ public class RestRoomService {
 
 	
 	public ArrayList<RestRoom> checkRectangle(double lat, double lon, double width, double height){
-		//같은 경도에서 높이값을 이용해 위도차이를 구한다.
-		double diffLat = calculateLatitude3(height/2d, lat,lon);
-		//같은 위도에서 width값을 이용해 경도차이를 구한다.
-		double diffLon = calculateLongitude3(width/2d, lat, lon);
+		//같은 경도에서 높이값을 이용해 중심점과의 위도차이를 구한다.
+		double diffLat = calculateLatitude(height/2d, lat,lon);
+		//같은 위도에서 width값을 이용해 중심점과의 경도차이를 구한다.
+		double diffLon = calculateLongitude(width/2d, lat, lon);
+		
+		//위도 최소값
 		double minLat =  lat - Math.abs(diffLat);
+		//위도 최대값
 		double maxLat =  lat + Math.abs(diffLat);
+		//경도 최소값
 		double minLon =  lon - diffLon;
+		//경도 최대값
 		double maxLon =  lon + diffLon;
 		
 		
@@ -37,6 +42,8 @@ public class RestRoomService {
     	ArrayList<RestRoom> restRoomList = new ArrayList<RestRoom>();
     	double modelLat=0d;
     	double modelLon=0d;
+    	
+    	//각 화장실의 위도 경도가 직사각형의 위도와 경도의 범위 안에 있는지 체크.
     	for (RestRoom restRoom : NaverCodingApplication.it) {
     		try {
     			modelLat = Double.parseDouble(restRoom.getLatitude());
@@ -53,81 +60,31 @@ public class RestRoomService {
 			}
 			
 		}
-    	
     	return restRoomList;
-		
-//		double theta = lon1 - lon2;
-//		double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
-//		dist = Math.acos(dist);
-//		dist = rad2deg(dist);
-//		dist = dist * 60 * 1.1515;
-//		if (unit == "K") {
-//			dist = dist * 1.609344;
-//		} else if (unit == "N") {
-//			dist = dist * 0.8684;
-//		}
-		
-		
 	}
+		
 	
+	/**
+	 * 다음 식을 이용하여 Longitude2 와 Longitude1이 같을 때의 h만큼 떨어진 거리의 위도값을 구한다.
+	 * 여기서 h는 직사각형의 높이/2의 값으로 단위는 km이다.
+	 * distance^2 = (distanceLatitude)^2 + (distanceLongitude)^2
+	 * distanceLatitude = 69.1*(latitude2 - latitude1)
+	 * distanceLongitude = 69.1*(longitude2 - longitude1)*cos(latitude1/57.3)
+	 */
 	public double calculateLatitude(double h, double lat, double lon) {
-		//근의공식 ax2 + bx + c = 0 
-		//km 단위의 distance를 기본 값인 마일로 변경.	 1위도당 60*1.1515 마일
-		double kRad =(h*Math.PI/(69.1*180d));
-		double radLat1 = degToRad(lat);
-		double a = 1d + Math.sin(radLat1)*Math.sin(radLat1);
-		double b = -2*Math.cos(kRad)*Math.cos(radLat1);
-		double c = Math.cos(kRad)*Math.cos(kRad) - Math.sin(radLat1)*Math.sin(radLat1);
-		double sqrtVal = Math.sqrt(b*b-(4*a*c));
-		double x = (-b + sqrtVal)/(2d*a);
-		double radLat2 = Math.acos(x); 
-		double lat2 = radToDeg(radLat2);
-		
-		log.info("distance : " +kRad);
-		log.info("radLat1 : " +radLat1);
-		log.info("a : " +a);
-		log.info("b : " +b);
-		log.info("c : " +c);
-		log.info("sqrtVal : " +sqrtVal);
-		log.info("x : " +x);
-		log.info("radLat2 : " +radLat2);
-		log.info("lat2 : " +lat2);
-		return (lat2 - lat);
-	}
-
-	
-	public double calculateLongitude(double w, double lat, double lon) {
-		double distance = (w/1.609344)/(60*1.1515);
-		double radLat1 = degToRad(lat);
-		double radLon1 = degToRad(lon);
-		double arcCosInner = (distance - Math.sin(radLat1)*Math.sin(radLat1))/(Math.cos(radLat1)*Math.cos(radLat1)); 
-		double radLon2 = Math.acos(arcCosInner)+ radLon1;
-		double lon2 = radToDeg(radLon2);
-		
-		return (lon2 - lon);
-	}
-
-	public double degToRad(double deg) {
-		return (deg * Math.PI / 180.0);
-	}
-
-	public double radToDeg(double rad) {
-		return (rad * 180 / Math.PI);
-	}
-	
-
-		
-	public double calculateLatitude3(double h, double lat, double lon) {
-		double kRad =(h/(110d));
-		double radLat1 = lat;
+		//근의공식 사용하여  위도(x)를 구한다. : ax2 + bx + c = 0 
+		//1km = 0.621371 mile
+		double kmToMile = 0.621371;
+		double distance =h*kmToMile;
+		double lat1 = lat;
 		double a = 1d ;
-		double b = -2*radLat1;
-		double c = radLat1*radLat1 - kRad*kRad;
+		double b = -2*lat1;
+		double c = lat1*lat1 - (distance/(69.1d))*(distance/(69.1d));
 		double sqrtVal = Math.sqrt(b*b-(4*a*c));
 		double x = (-b + sqrtVal)/(2d*a);
 		
-		log.info("distance : " +kRad);
-		log.info("radLat1 : " +radLat1);
+		log.info("distance(mile) : " +distance);
+		log.info("radLat1 : " +lat1);
 		log.info("a : " +a);
 		log.info("b : " +b);
 		log.info("c : " +c);
@@ -136,16 +93,26 @@ public class RestRoomService {
 		return (x - lat);
 	}
 	
-	public double calculateLongitude3(double w, double lat, double lon) {
-		double distance = w;
-		double k = 110d*110d*Math.cos(lat/57.3)*Math.cos(lat/57.3);
+	/**
+	 * 다음 식을 이용하여 distanceLatitude2 와 distanceLatitude1이 같을 때의 w만큼 떨어진 거리의 위도값을 구한다.
+	 * 여기서 w는 직사각형의 가로/2의 값으로 단위는 km이다.
+	 * distance^2 = (distanceLatitude)^2 + (distanceLongitude)^2
+	 * distanceLatitude = 69.1*(latitude2 - latitude1)
+	 * distanceLongitude = 69.1*(longitude2 - longitude1)*cos(latitude1/57.3)
+	 */
+	public double calculateLongitude(double w, double lat, double lon) {
+		//근의공식 사용하여  경도(x)를 구한다. : ax2 + bx + c = 0 
+		//1km = 0.621371 mile
+		double kmToMile = 0.621371;
+		double distance = w*kmToMile;
+		double k = 69.1d*69.1d*Math.cos(lat/57.3)*Math.cos(lat/57.3);
 		double a = k ;
 		double b = -2*k*lon;
 		double c = k*lon*lon-distance*distance;
 		double sqrtVal = Math.sqrt(b*b-(4*a*c));
 		double x = (-b + sqrtVal)/(2d*a);
 		
-		log.info("distance : " +distance);
+		log.info("distance(mile) : " +distance);
 		log.info("a : " +a);
 		log.info("b : " +b);
 		log.info("c : " +c);
