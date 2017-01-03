@@ -5,7 +5,8 @@
 1. cmd에서 project 경로로 이동
 2. jar로 패키지 : mvnw clean package
 3. 실행 : java -jar target/map-rest-1.0.0-SNAPSHOT.jar
-
+  - h2 database 확인 : http://localhost:8080/h2-console
+  
 ##2. API 기본 정보
 
 - API명 : 직사각형내의 공공화장실 API
@@ -48,3 +49,17 @@
     - latitude : 위도
     - longitude : 경도
     - regDt : 데이터기준일자
+
+##5. 호출예시
+
+1. json 호출 
+
+        - 호출 url : http://localhost:8080/json/rest_find?lon=128.44883116420243&lat=35.263795115189694&width=0.0001&height=0.1
+        
+        - 응답 : [{"id":1,"toiletType":"공중화장실","name":"입곡군립공원1(입구)","roadAddress":null,"unisexYN":"N","menLavatory":"2","menUrinal":"3","menDisabledLavatory":"1","menDisabledUrinal":"1","menChildLavatory":"0","menChildUrinal":"0","womenLavatory":"3","womenDisabledLavatory":"1","womenChildLavatory":"0","management":"경상남도 함안군청 환경보호과","phoneNumber":"055-580-2431","openTime":"24시간","establishDate":"2009-01-01","address":"경상남도 함안군 산인면 입곡리 산137-1","latitude":"35.263795115189694","longitude":"128.44883116420243","regDt":"2015-09-10"}]
+ 
+2. xml 호출
+
+       - 호출 url : http://localhost:8080/xml/rest_find?lon=128.44883116420243&lat=35.263795115189694&width=0.0001&height=0.1
+
+       - 응답  :  \<ArrayList>\<item>\<id>1</id>\<toiletType>공중화장실</toiletType>\<name>입곡군립공원1(입구)</name>\<roadAddress/>\<unisexYN>N</unisexYN>\<menLavatory>2</menLavatory>\<menUrinal>3</menUrinal>\<menDisabledLavatory>1</menDisabledLavatory>\<menDisabledUrinal>1</menDisabledUrinal>\<menChildLavatory>0</menChildLavatory>\<menChildUrinal>0</menChildUrinal>\<womenLavatory>3</womenLavatory>\<womenDisabledLavatory>1</womenDisabledLavatory>\<womenChildLavatory>0</womenChildLavatory>\<management>경상남도 함안군청 환경보호과</management>\<phoneNumber>055-580-2431</phoneNumber>\<openTime>24시간</openTime>\<establishDate>2009-01-01</establishDate>\<address>경상남도 함안군 산인면 입곡리 산137-1</address>\<latitude>35.263795115189694</latitude>\<longitude>128.44883116420243</longitude>\<regDt>2015-09-10</regDt>\</item>\</ArrayList>"
