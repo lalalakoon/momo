@@ -70,6 +70,9 @@ public class RestRoomService {
 	 * distance^2 = (distanceLatitude)^2 + (distanceLongitude)^2
 	 * distanceLatitude = 69.1*(latitude2 - latitude1)
 	 * distanceLongitude = 69.1*(longitude2 - longitude1)*cos(latitude1/57.3)
+	 * @param h : 직사각형의 세로/2 값
+	 * @param lat : 직사각형의 무게중심의 위도
+	 * @param lon : 직사각형의 무게중심의 경도
 	 */
 	public double calculateLatitude(double h, double lat, double lon) {
 		//근의공식 사용하여  위도(x)를 구한다. : ax2 + bx + c = 0 
@@ -94,11 +97,15 @@ public class RestRoomService {
 	}
 	
 	/**
-	 * 다음 식을 이용하여 distanceLatitude2 와 distanceLatitude1이 같을 때의 w만큼 떨어진 거리의 위도값을 구한다.
+	 * 다음 식을 이용하여 Latitude2 와 Latitude1이 같을 때의 w만큼 떨어진 거리의 경도값을 구한다.
 	 * 여기서 w는 직사각형의 가로/2의 값으로 단위는 km이다.
 	 * distance^2 = (distanceLatitude)^2 + (distanceLongitude)^2
 	 * distanceLatitude = 69.1*(latitude2 - latitude1)
 	 * distanceLongitude = 69.1*(longitude2 - longitude1)*cos(latitude1/57.3)
+	 * @param w : 직사각형의 가로/2 값
+	 * @param lat : 직사각형의 무게중심의 위도
+	 * @param lon : 직사각형의 무게중심의 경도
+	 * 
 	 */
 	public double calculateLongitude(double w, double lat, double lon) {
 		//근의공식 사용하여  경도(x)를 구한다. : ax2 + bx + c = 0 
